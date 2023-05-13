@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ping Game</title>
+  <style>
+    #pingButton {
+      font-size: 24px;
+      padding: 10px 20px;
+    }
+
+    #scoreboard {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ping Game - How fast can you hit Enter?</h1>
+  <button id="pingButton" onclick="startPingGame()">Start</button>
+  <p id="pingMessage"></p>
+  <p id="pingTime"></p>
+  <p id="averageTime"></p>
+
+  <h2>Scoreboard</h2>
+  <ol id="scoreboard"></ol>
+
+  <script>
+    let startTime, endTime;
+    let totalPingTime = 0;
+    let numPings = 0;
+    let scores = [];
+
+    function startPingGame() {
+      document.getElementById('pingButton').style.display = 'none';
+      document.getElementById('pingMessage').innerHTML = 'Ping!';
+      startTime = new Date();
+    }
+
+    function endPingGame() {
+      endTime = new Date();
+      let pingTime = (endTime - startTime) / 1000;
+      totalPingTime += pingTime;
+      numPings++;
+
+      document.getElementById('pingMessage').innerHTML = '';
+      document.getElementById('pingTime').innerHTML = 'Ping time: ' + pingTime.toFixed(3) + ' seconds';
+      document.getElementById('averageTime').innerHTML = 'Average ping time: ' + (totalPingTime / numPings).toFixed(3) + ' seconds';
+
+      scores.push(pingTime);
+      scores.sort((a, b) => a - b);
+      updateScoreboard();
+    }
+
+    function updateScoreboard() {
+      let scoreboard = document.getElementById('scoreboard');
+      scoreboard.innerHTML = '';
+
+      for (let i = 0; i < scores.length; i++) {
+        let scoreItem = document.createElement('li');
+        scoreItem.textContent = (i + 1) + '. ' + scores[i].toFixed(3) + ' seconds';
+        scoreboard.appendChild(scoreItem);
+      }
+    }
+    
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        endPingGame();
+      }
+    });
+  </script>
+</body>
+</html>
